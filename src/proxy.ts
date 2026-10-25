@@ -19,15 +19,16 @@ export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const isAuthPage = pathname === "/login" || pathname === "/register";
 
-  if (pathname.startsWith("/dashboard") && !isAuth) {
+  if ((pathname.startsWith("/dashboard") || pathname.startsWith("/students")) && !isAuth) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
   if (isAuthPage && isAuth) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
+  
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login", "/register"],
+  matcher: ["/dashboard/:path*", "/students/:path*", "/login", "/register"],
 };

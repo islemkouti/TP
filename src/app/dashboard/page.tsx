@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import LogoutButton from "@/components/LogoutButton";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   const session = await getSession();
@@ -9,7 +10,7 @@ export default async function DashboardPage() {
 
   const user = await prisma.user.findUnique({
     where: { id: session.userId },
-    select: { name: true, email: true, createdAt: true },
+    select: { name: true, email: true, role: true, createdAt: true },
   });
   if (!user) redirect("/login");
 
@@ -21,6 +22,14 @@ export default async function DashboardPage() {
         Membre depuis le{" "}
         {user.createdAt.toLocaleDateString("fr-FR")}
       </p>
+        <p>
+          Rôle : <strong>{user.role}</strong>
+          </p>
+          <p>
+            <Link href="/students" className="underline">
+            {user.role === "ETUDIANT" ? "Mon profil" : "Gérer les étudiants"}
+            </Link>
+          </p>
       <LogoutButton />
     </main>
   );

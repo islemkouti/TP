@@ -13,10 +13,20 @@ datasource db {
 }
 
 
+enum Role {
+  ADMIN
+  ENSEIGNANT
+  ETUDIANT
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
   name      String
   password  String
+  role      Role     @default(ETUDIANT)
+  filiere   String?
+  niveau    String?
+  moyenne   Float?
   createdAt DateTime @default(now())
 }
